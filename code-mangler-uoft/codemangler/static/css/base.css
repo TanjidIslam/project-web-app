@@ -1,0 +1,233 @@
+
+
+.btn:hover, .btn:active, .btn.active, .btn.disabled, .btn[disabled] {
+    background-color: #e6e6e6;
+}
+
+.btn-large {
+    padding: 9px 14px;
+    font-size: 15px;
+    line-height: normal;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    color: #333333;
+    text-decoration: none;
+    background-color: #e6e6e6;
+    background-position: 0 -15px;
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear;
+    -ms-transition: background-position 0.1s linear;
+    -o-transition: background-position 0.1s linear;
+    transition: background-position 0.1s linear;
+}
+
+.btn-primary, .btn-primary:hover {
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+}
+
+.btn-primary.active {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.btn-primary {
+    background-color: #4a77d4;
+    background-image: -moz-linear-gradient(top, #6eb6de, #4a77d4);
+    background-image: -ms-linear-gradient(top, #6eb6de, #4a77d4);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#6eb6de), to(#4a77d4));
+    background-image: -webkit-linear-gradient(top, #6eb6de, #4a77d4);
+    background-image: -o-linear-gradient(top, #6eb6de, #4a77d4);
+    background-image: linear-gradient(top, #6eb6de, #4a77d4);
+    background-repeat: repeat-x;
+    filter: progid:dximagetransform.microsoft.gradient(startColorstr=#6eb6de, endColorstr=#4a77d4, GradientType=0);
+    border: 1px solid #3762bc;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled] {
+    filter: none;
+    background-color: #4a77d4;
+}
+
+.btn-block {
+    width: 100%;
+    display: block;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    margin: 0;
+    padding: 20px;
+    height: 100%;
+}
+
+title {
+    color: #fff
+}
+
+.container-fluid, a#main-title-link {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    letter-spacing: 1px;
+}
+
+.container-fluid {
+    height: 100%;
+    padding-left: 30px;
+}
+
+.question, #logout {
+    color: white;
+    text-decoration: none;
+}
+
+a {
+    color: #4183c4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h1, h2, h3, h4 {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 0 0 15px;
+    padding: 0;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+h4 {
+    font-size: 1.2em;
+    padding: 10px 0px;
+}
+
+p, ul {
+    margin: 15px 0;
+}
+
+ul {
+    padding-left: 30px;
+}
+
+.code {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: "Bitstream Vera Sans Mono", Consolas, Courier, monospace;
+    font-size: 15px;
+    margin: 0 2px;
+    padding: 10px;
+    display: inline-block;
+    float: left;
+    width: 80%;
+    color: black;
+}
+
+#main-title-link {
+    color: inherit;
+    display: inline-block;
+    text-decoration: none;
+}
+
+#lines {
+    list-style-type: none;
+    padding: 0;
+    color: #092756;
+}
+
+header {
+    display: table;
+    width: 75%;
+    margin: 0 auto;
+    padding-left: 30px;
+}
+
+.container-fluid, #main-title-link {
+    display: table;
+    width: 75%;
+    margin: 0 auto;
+
+}
+
+.bottom-que{
+    color: white;
+}
+
+#lines li {
+    padding-bottom: 30px;
+    height: 10px;
+}
+
+#lines li:hover {
+    cursor: default;
+}
+
+#bloc1, #bloc2, #bloc3 {
+    display: inline-block;
+}
+
+#bloc2 {
+    width: 60%;
+}
+
+.rewind, .ffwd {
+    background-color: dodgerblue;
+    color: white;
+    border-radius: 90%;
+}
+
+#main-stuff {
+
+}
+
+@media (min-width: 991px) {
+    #main-stuff {
+        margin: auto;
+        width: 70%;
+        padding: 10px;
+    }
+}
+
+@media (min-width: 779px) {
+    #main-stuff {
+        margin-right: 11%;
+        margin-top: 6%;
+    }
+}
+
+
+
+
+
+
+
+

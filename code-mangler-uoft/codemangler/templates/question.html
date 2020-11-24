@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link href="/css/base.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    {% include 'navbar.html' %}
+    <main class="container-fluid" id="main-stuff">
+        <h4>{{ question['question'] }}</h4>
+        <p>Input: {{ question['input_description'] }}</p>
+        <p>Output: {{ question['output_description'] }}</p>
+
+        <ul id="lines">
+            <br/>
+            {% for line in lines %}
+                <div class="line" line-num={{ loop.index0 }}>
+                    <img class="arrow left-arrow" src="/img/left_arrow.svg" alt="Remove indentation">
+                    <img class="arrow right-arrow" src="/img/right_arrow.svg" alt="Add indentation">
+                    <li class="code"><span class="text-code">
+                    {{ line }}</div></li>
+                </div>
+            {% endfor %}
+            <br/>
+        </ul>
+        <button id="answer-question" value="{{ question['_id'] }}" class="btn btn-primary btn-large">Submit</button>
+        <div id="result"></div>
+    </main>  <!-- container-fluid -->
+    {% include 'footer.html' %}
+    {% include 'jslibraries-question.html' %}
+{% endblock %}
