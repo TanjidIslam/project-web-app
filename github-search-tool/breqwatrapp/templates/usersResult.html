@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Github User Search: {{ count }} Result(s) Found</h2>
+    <p><a href="/">Go back to search</a></p>
+    {% for user in users %}
+        <section class="col-xs-12 col-sm-6 col-md-12" id="profile">
+            <article class="search-result row">
+                <div class="col-xs-12 col-sm-12 col-md-3">
+                    <a href="{{ user.avatar_url }}" title="Click to view" class="thumbnail"><img
+                            src="{{ user.avatar_url }}"
+                            alt="Profile Picture"/></a>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-2">
+                    <ul class="meta-search">
+                        <li><i class="glyphicon glyphicon-calendar" title="Last Updated (Date)"></i>
+                            <span>{{ user.updated_at[:10] }}</span></li>
+                        <li><i class="glyphicon glyphicon-time" title="Last Updated (Time)"></i>
+                            <span>{{ user.updated_at[11:19] }}</span></li>
+                        <li><i class="glyphicon glyphicon-tags" title="Location"></i> <span>{{ user.location }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-7 excerpet">
+                    <p>
+                    <h3><a href="https://www.google.ca/#q={{ user.name }}" title="Search on Google">{{ user.name }}</a>
+                    </h3>
+                    <p>Username: {{ user.login }}</p>
+                    <p>Github: <a href="{{ user.html_url }}" title="">{{ user.html_url }}</a></p>
+                    <p>Total Contribution: {{ user.public_repos }} Repository</p>
+                    <p>Total Followers: {{ user.followers }}</p>
+                    <p>Total Following: {{ user.following }}</p>
+                    {% if user.hirable == true %}
+                        <p>Availability: Looking to be hired.</p>
+                    {% else %}
+                        <p>Availability: Not looking for a job.</p>
+                    {% endif %}
+                </div>
+                <span class="clearfix borda"></span>
+            </article>
+        </section>
+    {% endfor %}
+{% endblock %}

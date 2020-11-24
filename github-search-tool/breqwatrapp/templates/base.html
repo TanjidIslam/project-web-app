@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Breqwatr Github Search</title>
+
+    {% include "stylesheetLib.html" %}
+</head>
+
+<body>
+
+<header>
+    {% include "header.html" %}
+</header>
+
+<div class="container">
+    <div class="page-header">
+        <h1><a href="https://breqwatr.com/">
+            <span id="breq">breq</span><span id="watr">watr</span></a> Interview Assignment
+        </h1>
+    </div>
+    {% block content %}
+    {% endblock %}
+</div>
+
+<footer class="footer">
+    {% include "footer.html" %}
+</footer>
+
+{% include "jsLib.html" %}
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Github Repository Search: {{ count }} Result(s) Found</h2>
+    <p><a href="/">Go back to search</a></p>
+    {% for repo in repos %}
+        <section class="col-xs-12 col-sm-6 col-md-12" id="profile">
+            <article class="search-result row">
+                <div class="col-xs-12 col-sm-12 col-md-3">
+                    <a href="{{ repo["owner"].avatar_url }}" title="Click to view" class="thumbnail"><img
+                            src="{{ repo["owner"].avatar_url }}"
+                            alt="Profile Picture"/></a>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-2">
+                    <ul class="meta-search">
+                        <li><i class="glyphicon glyphicon-calendar" title="Last Updated (Date)"></i>
+                            <span>{{ repo.updated_at[:10] }}</span></li>
+                        <li><i class="glyphicon glyphicon-time" title="Last Updated (Time)"></i>
+                            <span>{{ repo.updated_at[11:19] }}</span></li>
+                        <li><i class="glyphicon glyphicon-star" title="Stars"></i>
+                            <span>{{ repo.stargazers_count }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-7 excerpet">
+                    <p>
+                    <h3><a href="https://www.google.ca/#q={{ repo.name }}" title="Open the link">{{ repo.html_url }}</a>
+                    </h3>
+                    <p>Author: <a href="{{ repo["owner"].html_url }}">{{ repo["owner"].login }}</a></p>
+                    <p>Github: <a href="{{ repo.html_url }}" title="">{{ repo.html_url }}</a></p>
+                    <p>Size: {{ repo.size }}</p>
+                    <p>Language: {{ repo.language }}</p>
+                    <p>Forks: {{ repo.forks }}</p>
+                </div>
+                <span class="clearfix borda"></span>
+            </article>
+        </section>
+    {% endfor %}
+{% endblock %}

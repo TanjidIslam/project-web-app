@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Github Search</h2>
+    <p class="lead">
+        Please fill in at least one field
+    </p>
+    <form role="form" method="POST" id="advancedSearch" name="advancedSearch">
+        <fieldset class="form-group">
+            <label for="searchMethod">Search</label>
+            <select class="form-control" id="searchCategory" name="selectCategory">
+                <option id="username-option">Username</option>
+                <option id="user-option">Users</option>
+                <option id="repo-option">Repositories</option>
+            </select>
+        </fieldset>
+
+        {% include "search-username.html" %}
+
+        {% include "search-users.html" %}
+
+        {% include "search-repo.html" %}
+
+        <button type="submit" class="btn btn-primary" id="search">
+            <span class="glyphicon glyphicon-search"></span> Search
+        </button>
+    </form>
+{% endblock %}
