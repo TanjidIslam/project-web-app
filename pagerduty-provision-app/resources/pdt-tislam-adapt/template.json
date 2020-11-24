@@ -1,0 +1,1 @@
+{"escalation_policy": "PMP063Z", "alert_creation": "create_alerts_and_incidents", "alert_grouping": "intelligent", "timed_grouping": false, "event_rules_path": ["path", "details", "tags"], "event_rules_path_str": "details.tags", "integrations": "datadog", "business_services": true, "impact_metrics": true, "business_services_relation": "1:1", "poi": ""}

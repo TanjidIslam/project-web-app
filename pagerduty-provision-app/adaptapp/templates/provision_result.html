@@ -1,0 +1,107 @@
+{% extends "provision_result_base.html" %}
+{% block content %}
+    <!--Navbar-->
+    {% include "navbar.html" %}
+    <!--/.Navbar-->
+
+    <form method="POST" role="form">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-9 col-md-8 col-sm">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Provisioning Summary</h3>
+                    </div>
+                    <table id="previewList" class="table table-striped table-bordered nowrap" style="width:100%">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Service</th>
+                            <th>Alert Creation</th>
+                            <th>Alert Grouping</th>
+                            <th>Event Rules</th>
+
+                            {% if template["impact_metrics"] %}
+                                <th>Impact Metrics</th>
+                            {% endif %}
+                            {% if template["business_services"] %}
+                                <th>Business Service</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in range(all_services|length) %}
+                            <tr>
+                                <td>{{ api_logs[log_services[i]]['service']['href']|safe }}</td>
+                                {% if api_logs[log_services[i]]['service']['alert_creation'] == 'create_alerts_and_incidents' %}
+                                    <td>Create Alerts & Incidents</td>
+                                {% else %}
+                                    <td>Create Incidents Only</td>
+                                {% endif %}
+                                {% if api_logs[log_services[i]]['service']['alert_grouping'] == 'intelligent' or api_logs[log_services[i]]['service']['payload']['alert_grouping'] == 'intelligent' %}
+                                    <td>Intelligent Grouping</td>
+                                {% else %}
+                                    <td>Timed Grouping</td>
+                                {% endif %}
+                                <td>{{ api_logs[log_services[i]]['event_rules']['str_rep']|safe }}</td>
+                                {% if template["impact_metrics"] %}
+                                    <td>{{ api_logs[log_services[i]]['impact_metrics']['name'] }}</td>
+                                {% endif %}
+                                {% if template["business_services"] %}
+                                    <td>{{ api_logs[log_services[i]]['business_service']['name'] }}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm">
+                    <table class="table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Provision Preview</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr hidden>
+                            <th scope="row">
+                                <select class="browser-default custom-select" name="end_game">
+                                    <option selected value="clear">Clear Cache</option>
+                                    <option value="delete">Delete Provisioned Data</option>
+                                </select>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a class="btn btn-danger btn-md btn-block" role="button"
+                                   href="/deprovision">Deprovision All</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a class="btn btn-info btn-md btn-block" role="button"
+                                   href="/discovery/services">Back to Service Page</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a class="btn btn-primary btn-md btn-block" role="button"
+                                   href="/">New Customer Session</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a class="btn btn-warning btn-md btn-block" role="button"
+                                   href="/clearcache">Restart Session</a>
+                            </th>
+                        </tr>
+                        {#                        <tr>#}
+                        {#                            <th scope="row">#}
+                        {#                                <button class="btn btn-primary btn-md btn-block" type="submit">End</button>#}
+                        {#                            </th>#}
+                        {#                        </tr>#}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>s
+{% endblock %}

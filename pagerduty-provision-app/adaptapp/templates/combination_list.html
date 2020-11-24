@@ -1,0 +1,80 @@
+{% extends "combination_list_base.html" %}
+{% block content %}
+    <!--Navbar-->
+    {% include "navbar.html" %}
+    <!--/.Navbar-->
+
+    <form method="POST" role="form">
+        <div class="container-fluid">
+            <div class="row">
+                <p></p>
+                <div class="col-lg-9 col-md-8 col-sm">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Service Abstract Combinations</h3>
+                    </div>
+
+                    <p>Service Abstraction - based on selected Abstract Combinations</p>
+                    <table id="tagList" class="table table-striped table-bordered nowrap" style="width:100%">
+                        <thead>
+                        <tr>
+{#                            {% for i in range(string_abstraction|length) %}#}
+{#                                <th>{{ string_abstraction[i] }}</th>#}
+{#                            {% endfor %}#}
+                            {% for i in range(type_keys|length)  %}
+                                <th><i>{{ type_keys[i] }}::</i> {{ combo_types[type_keys[i]]['string'] }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in range(max_len) %}
+                            <tr>
+                                {% for key in tag_combo %}
+                                    {% if tag_combo[key][0][i] %}
+                                        <td>{{ tag_combo[key][0][i] }}</td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+
+                                {% endfor %}
+                            </tr>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm">
+                    <table class="table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Event Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">
+                                <select class="custom-select" name="tag">
+                                    {% for i in range(type_keys|length)  %}
+                                        <option value="{{ type_keys[i] }}">{{ type_keys[i] }}:: {{ combo_types[type_keys[i]]['string'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a class="btn btn-secondary btn-md btn-block" role="button"
+                                   href="/provision/combination/build">Back to Abstraction Combination</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <button class="btn btn-primary btn-md btn-block" role="button" type="submit">Provisioning Preview</button>
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+

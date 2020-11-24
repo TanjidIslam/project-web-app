@@ -1,0 +1,24 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">PagerDuty ADAPT</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" target="_blank" href="https://admin.pagerduty.com/accounts/{{ subdomain }}">Admin</a>
+            <a class="nav-item nav-link" href="/discovery/services">Service Discovery</a>
+            {% if incidents_exist %}
+                <a class="nav-item nav-link" href="/discovery/incidents" target="_blank">Events</a>
+            {% endif %}
+            {% if tags_exist %}
+                <a class="nav-item nav-link" href="/discovery/fields/multiple" target="_blank">Field Discovery</a>
+            {% endif %}
+            {% if provisioned %}
+                <a class="nav-item nav-link" href="/provision/results" target="_blank">Deprovision</a>
+            {% endif %}
+            <a class="nav-item nav-link" href="/clearcache">New Session</a>
+            <a class="nav-item nav-link" href="/">Logout</a>
+        </div>
+    </div>
+</nav>

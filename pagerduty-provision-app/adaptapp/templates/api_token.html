@@ -1,0 +1,28 @@
+{% extends "navless_base.html" %}
+{% block content %}
+    <div class="login-page">
+        <div class="form">
+            <form class="login-form" method="POST" role="form">
+                <input type="password" placeholder="Global API Token" name="global_token" required="true"/>
+                <input type="password" placeholder="User API Token" name="user_token" required="true"/>
+                {% if disco_choice %}
+                    <hr>
+                    <input type="password" placeholder="DataDog API Token" name="dd_api_token" required="true"/>
+                    <input type="password" placeholder="DataDog APP Token" name="dd_app_token" required="true"/>
+                {% endif %}
+                <hr>
+                <button type="submit">Access Account</button>
+            </form>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            <p>{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+        </div>
+    </div>
+{% endblock %}

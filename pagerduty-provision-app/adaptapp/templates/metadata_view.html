@@ -1,0 +1,50 @@
+{% extends "navless_base.html" %}
+{% block content %}
+    <div class="login-page">
+        <div class="form">
+            <form class="login-form" method="POST" role="form">
+                <input type="text" class="form-control" id="consultantName" name="consultant_name"
+                       placeholder="Consultant Name" value="{{ session["consultant_name"] }}" required>
+                <input type="text" class="form-control" id="customerName" name="customer_name"
+                       placeholder="Customer Name" value="{{ session["customer_name"] }}" required>
+                <input type="text" class="form-control" id="techOwner" name="tech_owner"
+                       placeholder="Tech Owner" value="{{ session["tech_owner"] }}">
+                <input type="text" class="form-control" id="bizOwner" name="biz_owner"
+                       placeholder="Business Owner" value="{{ session["biz_owner"] }}">
+                <input type="text" class="form-control" id="slackNo" name="slack_number"
+                       placeholder="Slack #" value="{{ session["slack_number"] }}">
+                {% if 'github_id' in session %}
+                    <input type="text" class="form-control" id="github" name="github_id"
+                       placeholder="Github" value="{{ session["github_id"] }}">
+                {% else %}
+                    <input type="text" class="form-control" id="github" name="github_id"
+                       placeholder="Github" value="github.com/">
+                {% endif %}
+                <input type="text" class="form-control" id="supportHours" name="support_hours"
+                       placeholder="Support Hours" value="{{ session["support_hours"] }}">
+                <input type="text" class="form-control" id="runBook" name="run_book"
+                       placeholder="Run Book" value="{{ session["run_book"] }}">
+                <label>Choose your default policy</label>
+                <select name="escalation_policy" class="browser-default custom-select">
+                    {% for ep in all_ep %}
+                        <option class="form-control" value="{{ ep["id"] }}">{{ ep["name"] }}</option>
+                    {% endfor %}
+                </select>
+                <p></p>
+                <textarea class="form-control" placeholder="Notes, Purpose of the Engagement, etc."
+                                      name="customer_note" id="customerNote" rows="3" value="{{ session['note'] }}"></textarea>
+                <hr>
+                <button type="Process Disco">Next</button>
+            </form>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            <p>{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock %}

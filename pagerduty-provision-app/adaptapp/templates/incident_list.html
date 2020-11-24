@@ -1,0 +1,188 @@
+{% extends "incident_list_base.html" %}
+{% block content %}
+    <!--Navbar-->
+    {% include "navbar.html" %}
+    <!--/.Navbar-->
+
+    <div class="se-pre-con"></div>
+    <form method="POST" role="form">
+        <div class="container-fluid">
+            <div class="row">
+                <p></p>
+                <div class="col-lg-9 col-md-8 col-sm">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Incidents</h3>
+                    </div>
+                    <p>{{ incidents|length }} incidents found for selected services</p>
+
+                    <table id="incidentListExport" class="table table-bordered">
+                        <thead>
+                        <tr>
+                            {% for key in keys %}
+                                <th style="display: none">{{ key }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in range(incidents|length) %}
+                            <tr>
+                                {% for key in keys %}
+                                    <td style="display: none">{{ incidents[i][key] }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <table id="incidentList" class="table table-bordered"
+                           style="border-collapse:collapse;width:100%;">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>#</th>
+                            <th>Incident</th>
+                            <th>Created At</th>
+                            <th>Status</th>
+                            <th>Urgency</th>
+                            <th>Service</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in range(incidents|length) %}
+                            <tr>
+                                <td class="clickable" data-toggle="collapse" data-target="#incident-info-{{ i }}"
+                                    aria-expanded="false" aria-controls="incident-info-{{ i }}"><i
+                                        class="fas fa-angle-double-down"></i></td>
+                                <td></td>
+                                <td><a href="{{ incidents[i]["html_url"] }}"
+                                       target="_blank">{{ incidents[i]["incident_number"] }}</a></td>
+                                <td>{{ incidents[i]["title"] }}</td>
+                                <td>{{ incidents[i]["created_at"][:10] }} {{ incidents[i]["created_at"][11:-1] }}</td>
+                                <td>{{ incidents[i]["status"] }}</td>
+                                <td>{{ incidents[i]["urgency"] }}</td>
+                                <td><a href="{{ incidents[i]["service[html_url]"] }}"
+                                       target="_blank">{{ incidents[i]["service[summary]"] }}</a></td>
+                            </tr>
+                            <tbody id="incident-info-{{ i }}" class="collapse">
+
+                            <!-- First Log Entry Section -->
+                            <tr>
+                                <td></td>
+                                <td class="table-secondary" align="right" colspan="1">
+                                    <strong>First Trigger Log Entry</strong>
+                                </td>
+                                <td colspan="7">
+                                    <a class="clickable" data-toggle="collapse"
+                                       data-target="#ftle-info-{{ i }}"
+                                       aria-expanded="false" aria-controls="ftle-info-{{ i }}"><p><i
+                                            class="fas fa-angle-double-down"></i></p></a>
+                                    <div id="ftle-info-{{ i }}" class="collapse">
+                                        {% for x in range(ftle_keys|length) %}
+                                            {% if ftle[i][ftle_keys[x]] %}
+                                                <p><input type="checkbox" name="ftle_field_{{ x }}"
+                                                          value="{{ ftle_keys[x] }}">
+                                                    <strong>{{ ftle_keys[x] }}:</strong> {{ ftle[i][ftle_keys[x]] }}
+                                                </p>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <a class="clickable table-dark" data-toggle="collapse"
+                                           data-target="#ftle-info-{{ i }}"
+                                           aria-expanded="false" aria-controls="ftle-info-{{ i }}">
+                                            <p>Collapse <i class="fas fa-angle-double-up"></i></p></a>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% for x in range(keys|length) %}
+                                {% if keys[x] in incidents[i] %}
+                                    <tr>
+                                        <td><input type="checkbox" name="incident_field_{{ x }}"
+                                                   value="{{ keys[x] }}">
+                                        </td>
+                                        <td class="table-secondary" align="right" colspan="1">
+                                            <strong>{{ keys[x] }}</strong>
+                                        </td>
+                                        <td colspan="7">{{ incidents[i][keys[x]] }}</td>
+                                    </tr>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+
+                            <tr class="clickable table-dark" data-toggle="collapse"
+                                data-target="#incident-info-{{ i }}"
+                                aria-expanded="false" aria-controls="incident-info-{{ i }}">
+                                <td colspan="11"><p>Collapse <i class="fas fa-angle-double-up"></i></p></td>
+                            </tr>
+
+                            </tbody>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot class="thead-light">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>#</th>
+                            <th>Incident</th>
+                            <th>Created At</th>
+                            <th>Status</th>
+                            <th>Urgency</th>
+                            <th>Service</th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm">
+                    <table class="table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Event Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">
+                                <label>For Recent Incident Data:</label>
+                                <a class="btn btn-warning btn-md btn-block" role="button" href="/discovery/services">Reload Incidents</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <select class="custom-select" name="tag_action">
+                                    <option selected value="">Select An Action</option>
+                                    <option value="update">Add Selected Fields For Tags Discovery</option>
+                                    <option value="delete">Delete Selected Fields From Tags Discovery</option>
+                                </select>
+                            </th>
+                        </tr>
+                        {% if tags %}
+                            <tr>
+                                <th scope="row" id="selectedTags">
+                                    <label>Selected Fields for Tags:</label>
+                                    {% for tag in tags %}
+                                        {% if tag != "untagged" %}
+                                            <p><input type="checkbox" name="tag-{{ tag }}" value="{{ tag }}"> {{ tag }}
+                                            </p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </th>
+                            </tr>
+
+                        {% endif %}
+                        <tr>
+                            <th scope="row">
+                                <button class="btn btn-info btn-md btn-block" type="submit">Update Tags</button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a class="btn btn-primary btn-md btn-block" role="button" href="/discovery/fields/multiple">Tag Discovery</a>
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

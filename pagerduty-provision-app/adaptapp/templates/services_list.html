@@ -1,0 +1,282 @@
+{% extends "services_list_base.html" %}
+{% block content %}
+    <!--Navbar-->
+    {% include "navbar.html" %}
+    <!--/.Navbar-->
+
+    <div class="se-pre-con"></div>
+    <form id="serviceCheck" method="POST" role="form">
+        <div class="container-fluid">
+            <div class="row">
+                <p></p>
+                <div class="col-lg-9 col-md-8 col-sm">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Services</h3>
+                    </div>
+                    <p>{{ services|length }} services found in this customer's instance.</p>
+
+                    <table id="serviceListExport" class="table table-bordered">
+                        <thead>
+                        <tr>
+                            {% for key in keys %}
+                                <th style="display: none">{{ key }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in range(services|length) %}
+                            <tr>
+                                {% for key in keys %}
+                                    <td style="display: none">{{ services[i][key] }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <table id="serviceList" class="table table-bordered nowrap" style="width:100%">
+                        <!-- foundation
+                        <table id="serviceList" class="display nowrap" style="width:100%"> -->
+
+                        <thead class="thead-dark">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Integration</th>
+                            <th>Last Incident</th>
+                            <th>Created At</th>
+                            <th>Status</th>
+                            <th>Alert Creation Behavior</th>
+                            <th>Alert Grouping Behavior</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in range(services|length) %}
+                            <tr>
+                                <td class="clickable" data-toggle="collapse" data-target="#service-info-{{ i }}"
+                                    aria-expanded="false" aria-controls="service-info-{{ i }}"><i
+                                        class="fas fa-angle-double-down"></i></td>
+                                <td><input type="checkbox" name="service_{{ i + 1 }}"
+                                           value="{{ services[i]['id'] }}"></td>
+                                <td>{% if (not services[i]["integrations"]) %}
+                                    <i class="fas fa-exclamation-circle" style="color:red"></i>
+                                {% else %}
+                                    {% if services[i]['integrations']|length == 1 and services[i]['integrations'][0]['type'] == "generic_email_inbound_integration_reference" %}
+                                        <i class="fas fa-exclamation-circle" style="color:red"></i>
+                                    {% else %}
+                                        <i class="fas fa-check-circle" style="color:green"></i>
+                                    {% endif %}
+                                {% endif %}</td>
+                                <td><a href="{{ services[i]['html_url'] }}"
+                                       target="_blank">{{ services[i]['name'] }}</a></td>
+
+                                {% if services[i]['integrations'] %}
+                                    <td>
+                                        <div class="row">
+                                            {% for integration in services[i]['integrations'] %}
+
+                                                {% if integration['type'] == 'generic_email_inbound_integration_reference' %}
+                                                    <i class="fas fa-cogs" style="color:red"> Email Integration</i>
+                                                {% else %}
+                                                    <i class="fas fa-cogs"
+                                                       style="color:green"> {{ integration['summary'] }}</i>
+                                                {% endif %}
+
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+
+                                {% else %}
+                                    <td>
+                                        <div class="row">
+                                            <i class="fas fa-cogs" style="color:red"> No Integrations</i>
+
+                                        </div>
+                                    </td>
+                                {% endif %}
+
+                                <td>{{ services[i]['created_at'][:10] }} {{ services[i]['created_at'][11:-1] }}</td>
+                                {% if services[i]['last_incident_timestamp'] %}
+                                    <td>{{ services[i]['last_incident_timestamp'][:10] }} {{ services[i]['last_incident_timestamp'][11:-1] }}</td>
+                                {% else %}
+                                    <td>No Incidents Created</td>
+                                {% endif %}
+                                <td>{{ services[i]['status'] }}</td>
+                                <td>
+                                    {{ services[i]['alert_creation'][0]|upper }}{{ services[i]['alert_creation'][1:]|replace("_", " ") }}</td>
+                                {% if services[i]['alert_grouping'] %}
+                                    <td>
+                                        {{ services[i]['alert_grouping'][0]|upper }}{{ services[i]['alert_grouping'][1:]|replace("_", " ") }}</td>
+                                {% else %}
+                                    <td>None</td>
+                                {% endif %}
+                            </tr>
+                            <tbody id="service-info-{{ i }}" class="collapse">
+                            {% for key in keys %}
+                                <tr>
+                                    <td class="table-secondary" colspan="3" align="right"><strong>{{ key }}</strong>
+                                    </td>
+                                    <td colspan="8">{{ services[i][key]|replace("'", "\"") }}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr class="clickable table-dark" data-toggle="collapse" data-target="#service-info-{{ i }}"
+                                aria-expanded="false" aria-controls="service-info-{{ i }}">
+                                <td colspan="11"><p>Collapse <i class="fas fa-angle-double-up"></i></p></td>
+                            </tr>
+                            </tbody>
+                        {% endfor %}
+                        </tbody>
+                        <tfoot class="thead-light">
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Integration</th>
+                            <th>Last Incident</th>
+                            <th>Created At</th>
+                            <th>Status</th>
+                            <th>Alert Creation Behavior</th>
+                            <th>Alert Grouping Behavior</th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm">
+                    <table class="table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Service Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <tr>
+                                    <td scope="row">
+                                        {% for message in messages %}
+                                            <p style="color: #EF3B3A">{{ message }}</p>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endwith %}
+                        <tr>
+                            <th scope="row" hidden>
+                                <select class="custom-select" name="service_action">
+                                    <option name="deleteServices" value="delete">Delete Selected Services</option>
+                                    <option name="updateServices" value="update">Modify Selected Services</option>
+                                    <option name="reviewServices" selected value="review">Review Selected Services
+                                    </option>
+                                </select>
+                            </th>
+                        </tr>
+                        <tr id="ServiceDescRow" hidden>
+                            <th scope="row">
+                                <div>
+                                    <label for="prefixService">Add Prefix To Service Name:</label>
+                                    <input id="prefixService" class="form-control" type="text"
+                                           placeholder="Service Prefix"
+                                           name="prefix_service" disabled/>
+                                    <label for="suffixService">Add Suffix To Service Name:</label>
+                                    <input id="suffixService" class="form-control" type="text"
+                                           placeholder="Service Suffix"
+                                           name="suffix_service" disabled/>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr id="alertCreationRow" hidden>
+                            <th scope="row">
+                                <div>
+                                    <label for="alertCreation">Alert Creation Setting:</label>
+                                    <select class="custom-select" name="alert_creation" id="alertCreation" disabled
+                                            hidden>
+                                        <option value="create_incidents">Create Incidents Only</option>
+                                        <option value="create_alerts_and_incidents">Create Incidents & Alerts</option>
+                                        <option selected value="review">Disable</option>
+                                    </select>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr id="alertGroupingRow" hidden>
+                            <th scope="row">
+                                <div>
+                                    <label for="alertGrouping">Alert Grouping Setting:</label>
+                                    <select class="custom-select" name="alert_grouping" id="alertGrouping" disabled>
+                                        <option value="intelligent">Intelligent Grouping</option>
+                                        <option value="time">Timed Grouping</option>
+                                        <option selected value="None">Disable</option>
+                                    </select>
+                                </div>
+                                <select class="custom-select" name="timed_grouping" id="alertGroupingTime" disabled
+                                        hidden>
+                                    <option value="2">2 Minutes</option>
+                                    <option value="5">5 Minutes</option>
+                                    <option value="15">15 Minutes</option>
+                                    <option value="30">30 Minutes</option>
+                                    <option value="60">1 Hour</option>
+                                    <option value="120">2 Hours</option>
+                                    <option value="240">4 Hours</option>
+                                    <option value="480">8 Hours</option>
+                                    <option value="720">12 Hours</option>
+                                    <option value="1440">24 Hours</option>
+                                    <option value="resolves">24 Hours</option>
+                                </select>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <p>Select Relevant Services and Configuration Discovery Window:</p>
+                                <button class="btn btn-primary btn-md btn-block" type="submit">Discovery Configuration
+                                </button>
+                            </th>
+                        </tr>
+                        {% if tags_exist or provisioned or previewed %}
+                            <tr>
+                                <th scope="row">
+                                    <p>Existing session found. Click below to restart the session (Recommended for new
+                                        session):</p>
+                                    <a class="btn btn-secondary btn-md btn-block" role="button" target="_blank"
+                                       href="{{ url_for('clear_cache') }}">Restart the Session</a>
+                                </th>
+                            </tr>
+                        {% endif %}
+                        {% if tags_exist %}
+                            <tr>
+                                <th scope="row">
+                                    <p>Existing Tags exists from previous session. Click below to access:</p>
+                                    <a class="btn btn-info btn-md btn-block" role="button" target="_blank"
+                                       href="{{ url_for('tag_list_multiple') }}">Access Existed Fields</a>
+                                </th>
+                            </tr>
+                        {% endif %}
+                        {% if previewed %}
+                            <tr>
+                                <th scope="row">
+                                    <p>Previous Pre-Provisioned Preview found in this account. Click below to view:</p>
+                                    <a class="btn btn-warning btn-md btn-block" role="button" target="_blank"
+                                       href="{{ url_for('get_provision_data') }}">Preview Pre-Provisioned Data</a>
+                                </th>
+                            </tr>
+                        {% endif %}
+                        {% if provisioned %}
+                            <tr>
+                                <th scope="row">
+                                    <p>Previously Provisionded Data found in this account. Click below to
+                                        view/Deprovision:</p>
+                                    <a class="btn btn-danger btn-md btn-block" role="button" target="_blank"
+                                       href="{{ url_for('extract_logs') }}">View Provisioned Data</a>
+                                </th>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

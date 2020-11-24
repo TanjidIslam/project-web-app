@@ -1,0 +1,237 @@
+{% extends "provision_preview_base.html" %}
+{% block content %}
+    <!--Navbar-->
+    {% include "navbar.html" %}
+    <!--/.Navbar-->
+
+    <form method="POST" role="form">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-9 col-md-8 col-sm">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Preview Provisioning</h3>
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <h4 style="color: #EF3B3A">WARNING: {{ message }}</h4>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                    <table id="previewList" class="table table-striped table-bordered nowrap" style="width:100%">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Service</th>
+                            <th>Escalation Policy</th>
+                            <th>Alert Creation</th>
+                            <th>Alert Grouping</th>
+                            <th>Event Rules</th>
+                            {% if template['impact_metrics'] %}
+                                <th>Impact Metrics</th>
+                            {% endif %}
+                            {% if template['business_services'] %}
+                                <th>Business Service Name</th>
+                                <th>Business Service Point of Interest</th>
+                                <th>Business Service Relationship</th>
+                            {% endif %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for i in range(all_services|length) %}
+                            <tr>
+                                <td>{{ changes[all_services[i]]['service']['name'] }}</td>
+                                <td>{{ changes[all_services[i]]['service']['ep_id'] }}</td>
+                                {% if changes[all_services[i]]['service']['alert_creation'] == 'create_alerts_and_incidents' %}
+                                    <td>Create Alerts & Incidents</td>
+                                {% else %}
+                                    <td>Create Incidents Only</td>
+                                {% endif %}
+                                {% if changes[all_services[i]]['service']['alert_grouping'] == 'intelligent' %}
+                                    <td>Intelligent Grouping</td>
+                                {% else %}
+                                    <td>Timed Grouping</td>
+                                {% endif %}
+                                <td>{{ changes[all_services[i]]['event_rules']['str_rep']|safe }}</td>
+
+                                {% if template['impact_metrics'] %}
+                                    <td>{{ changes[all_services[i]]['impact_metrics']['name'] }}</td>
+                                {% endif %}
+                                {% if template['business_services'] %}
+                                    <td>{{ changes[all_services[i]]['business_service']['name'] }}</td>
+                                    <td>{{ changes[all_services[i]]['business_service']['point_of_contact'] }}</td>
+                                    {% if changes[all_services[i]]['business_service']['relationship'] == "supporting_services" %}
+                                        <td>Supporting Service</td>
+                                    {% elif changes[all_services[i]]['business_service']['relationship'] == "dependent_services" %}
+                                        <td>Dependent Service</td>
+                                    {% endif %}
+                                {% endif %}
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm">
+                    <table class="table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Provision Preview</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">
+                                <select class="custom-select" name="service_action">
+                                    <option name="deleteServices" value="default" selected>Use Default Provisioning
+                                        Configuration
+                                    </option>
+                                    <option name="updateServices" value="update">Modify Provisioning Configuration
+                                    </option>
+                                </select>
+                            </th>
+                        </tr>
+                        <tr id="bizSvcButton" hidden>
+                            <th scope="row">
+                                <label for="escalation_policy">Escalation Policy:</label>
+                                <select name="escalation_policy" class="browser-default custom-select">
+                                    <option class="form-control" value="{{ template["escalation_policy"] }}" selected>
+                                        Unchanged
+                                    </option>
+                                    {% for ep in all_ep %}
+                                        <option class="form-control" value="{{ ep["id"] }}">{{ ep["name"] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </th>
+                        </tr>
+                        <tr id="bizSvcButton" hidden>
+                            <th scope="row">
+                                <div>
+                                    <label for="bizSvc">Provision Business Service:</label>
+                                    <select class="custom-select" name="business_service" id="bizSvc" disable>
+                                        {% if template["business_services"] %}
+                                            <option value="true" selected>Yes</option>
+                                            <option value="false">No</option>
+                                        {% else %}
+                                            <option value="true">Yes</option>
+                                            <option value="false" selected>No</option>
+
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr id="impactButton" hidden>
+                            <th scope="row">
+                                <div>
+                                    <label for="impactMetrics">Provision Impact Metrics:</label>
+                                    <select class="custom-select" name="impact_metrics" id="impactMetrics" disable>
+                                        {% if template["impact_metrics"] %}
+                                            <option value="true" selected>Yes</option>
+                                            <option value="false">No</option>
+                                        {% else %}
+                                            <option value="true">Yes</option>
+                                            <option value="false" selected>No</option>
+
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr id="eventRules" hidden>
+                            <th scope="row">
+                                <div>
+                                    <label for="eventRules">Event Routing Path:</label>
+                                    <input id="eventRules" class="form-control" type="text"
+                                           placeholder="Event Rules Path"
+                                           name="eventRules"
+                                           value="{{ template["event_rules_path_str"] }}" disabled/>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr id="alertCreationRow" hidden>
+                            <th scope="row">
+                                <div>
+                                    <label for="alertCreation">Alert Creation Setting:</label>
+                                    <select class="custom-select" name="alert_creation" id="alertCreation" disabled
+                                            hidden>
+                                        {% if template['alert_creation'] == 'create_alerts_and_incidents' %}
+                                            <option value="create_incidents">Create Incidents Only</option>
+                                            <option value="create_alerts_and_incidents" selected>Create Incidents &
+                                                Alerts
+                                            </option>
+                                        {% else %}
+                                            <option value="create_incidents" selected>Create Incidents Only</option>
+                                            <option value="create_alerts_and_incidents">Create Incidents & Alerts
+                                            </option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr id="alertGroupingRow" hidden>
+                            <th scope="row">
+                                <div>
+                                    <label for="alertGrouping">Alert Grouping Setting:</label>
+                                    <select class="custom-select" name="alert_grouping" id="alertGrouping">
+                                        {% if template['alert_grouping']=='intelligent' %}
+                                            <option value="intelligent" selected>Intelligent Grouping</option>
+                                            <option value="time">Timed Grouping</option>
+                                            <option value="None">Disable</option>
+                                        {% elif template['alert_grouping']=='time' %}
+                                            <option value="intelligent">Intelligent Grouping</option>
+                                            <option value="time" selected>Timed Grouping</option>
+                                            <option value="None">Disable</option>
+                                        {% else %}
+                                            <option value="intelligent">Intelligent Grouping</option>
+                                            <option value="time">Timed Grouping</option>
+                                            <option selected value="None">Disable</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                                <select class="custom-select" name="timed_grouping" id="alertGroupingTime" disabled
+                                        hidden>
+                                    <option value="2">2 Minutes</option>
+                                    <option value="5">5 Minutes</option>
+                                    <option value="15">15 Minutes</option>
+                                    <option value="30">30 Minutes</option>
+                                    <option value="60">1 Hour</option>
+                                    <option value="120">2 Hours</option>
+                                    <option value="240">4 Hours</option>
+                                    <option value="480">8 Hours</option>
+                                    <option value="720">12 Hours</option>
+                                    <option value="1440">24 Hours</option>
+                                    <option value="0">Until Resolves</option>
+                                </select>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a class="btn btn-info btn-md btn-block" href="/provision/combination/list"
+                                   role="button">Back to
+                                    Combinations List</a>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a class="btn btn-secondary btn-md btn-block" href="/provision/combination/build"
+                                   role="button">Back to Building Combinations</a>
+                            </th>
+                        </tr>
+                        <tr id="updateConfigButton" hidden>
+                            <th scope="row">
+                                <button class="btn btn-primary btn-md btn-block" type="submit">Update Configuration
+                                </button>
+                            </th>
+                        </tr>
+                        <tr id="provisionButton">
+                            <th scope="row">
+                                <a href="/provision/results" class="btn btn-primary btn-md btn-block">Provision</a>
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

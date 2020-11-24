@@ -1,0 +1,26 @@
+{% extends "navless_base.html" %}
+{% block content %}
+    <div class="login-page">
+        <div class="form">
+            <form class="login-form" method="POST" role="form">
+                <select class="browser-default custom-select" name="disco_select">
+                    <option selected value="0">Disco Method</option>
+                    <option value="1">Hostname/Tag Discovery via PagerDUty API</option>
+                    <option value="2">Tag Discovery via DataDog API</option>
+{#                    <option value="3">Generic Hostname/Nodename</option>#}
+                </select>
+                <p> </p>
+                <button type="submit">Next</button>
+            </form>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            <p>{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock %}
