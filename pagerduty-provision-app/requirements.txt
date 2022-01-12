@@ -1,5 +1,5 @@
 datadog==0.32.0
 Flask==1.0.2
 json-flatten==0.1
-Jinja2==2.11.1
+Jinja2==2.11.3
 pdpyras==3.0.2
