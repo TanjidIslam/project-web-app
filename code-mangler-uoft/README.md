@@ -31,7 +31,7 @@ Note: In order for authentication to work you will need the client ID and secret
 Once you have them, set them in your environment with the keys UTEACH_OAUTH2_CLIENT_ID and UTEACH_OAUTH2_CLIENT_SECRET.
 
 ```console
-$ git clone https://github.com/TanjidIslam/code-mangler.git
+$ git clone https://github.com/BrianHarringtonUTSC/code-mangler.git
 $ cd code-mangler
 $ pyvenv-3.5 env
 $ source env/bin/activate
