@@ -6,7 +6,7 @@ cffi==1.5.2
 colorama==0.3.6
 Command==0.1.0
 facebook-sdk==1.0.0a0
-Flask==1.0
+Flask==2.3.2
 Flask-Bcrypt==0.7.1
 Flask-Login==0.3.2
 Flask-Mail==0.9.1
